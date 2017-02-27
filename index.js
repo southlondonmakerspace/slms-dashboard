@@ -38,9 +38,16 @@ router.get('/busDepartures', (req, res) => {
         res.end('error:' + error)
     })
 })
-
+router.get('/tubeStatus', (req, res) => {
+   tfl.lookupStatuses('tube').then ( (data) => {
+      res.end(JSON.stringify(data))
+   }).catch((error) =>{
+      res.end('error')
+   })
+})
 
 app.use("/", router);
+app.use(express.static('public'))
 
 app.use("*", (req, res) => {
     res.sendFile(path + "404.html");

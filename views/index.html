@@ -3,15 +3,56 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Single page web app using Angularjs</title>
+    <title>South London Makerspace Dashboard</title>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.3/angular-route.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <style>
+        html,
+        body, .container {
+            padding:0;
+            margin:0;
+            margin-left:0px;
+            margin-top:0px;
+        }
+        .row {
+           padding-left:5px;
+           padding-right:5px;
+        }
+        .page-header {
+           margin-top:0px;
+           padding-top:0px;
+           height:75px;
+           vertical-align: middle;
+        }
+
+        #msLogo {
+            background-image: url(/Logomark.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: red;
+            width: 75px;
+            height: 75px;
+            float: left;
+            padding: 10px;
+            margin-right: 20px;
+        }
+
+        h2 {
+            font-size: 13pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+        }
+
         .stopHeader {
             background-color: red;
+        }
+
+        #busDepartures ul {
+            padding-left: 0;
         }
 
         h3.busStopHeader {
@@ -25,6 +66,11 @@
             padding: 10px;
             list-style: none;
             vertical-align: center;
+            margin-left: 0;
+        }
+
+        .busDeparture {
+            float: right;
         }
 
         .busNumber {
@@ -41,10 +87,9 @@
             font-weight: bold;
         }
 
-        .trainBoard {}
-
         #trainDepartures ul {
             list-style: none;
+            padding-left: 0;
         }
 
         #trainDepartures ul li {
@@ -52,10 +97,12 @@
         }
 
         .toc {
-            float: right;
             border-radius: 5px;
             padding: 5px;
+            margin: 0 10px 0 10px;
         }
+        /* Train Operator colours */
+        /* https://en.wikipedia.org/wiki/Wikipedia:WikiProject_UK_Railways/Colours_list */
 
         .toc-SE {
             background-color: #00afe8;
@@ -67,19 +114,106 @@
 
         .trainTime {
             font-weight: bold;
-            width: 75px;
+            width: 32pt;
             text-align: center;
             float: left;
         }
-        .trainPlatform {
 
+        .trainEtd {
+            float: right;
+            font-weight: bold;
         }
+
+        #tubeStatus ul {
+            padding-left: 0;
+            list-style: none
+        }
+
+        #tubeStatus ul li {
+            padding: 0;
+            clear: both;
+        }
+
+        .tubeStatusLine {
+            padding: 8px;
+        }
+
+        .tubeLabel {
+            color: white;
+            font-weight: bold;
+            width: 120px;
+            text-align: center;
+            float: left;
+            padding: 2px;
+        }
+
+        .tubeServiceLevel {
+            text-align: right;
+            vertical-align: center;
+        }
+
+        .tube-bakerloo {
+            background-color: #B36305
+        }
+
+        .tube-central {
+            background-color: #E32017
+        }
+
+        .tube-circle {
+            background-color: #FFD300
+        }
+
+        .tube-district {
+            background-color: #00782A
+        }
+
+        .tube-jubilee {
+            background-color: #A0A5A9
+        }
+
+        .tube-hammersmith-city {
+            background-color: #F3A9BB
+        }
+
+        .tube-metropolitan {
+            background-color: #9B0056
+        }
+
+        .tube-northern {
+            background-color: #000000
+        }
+
+        .tube-piccadilly {
+            background-color: #003688
+        }
+
+        .tube-victoria {
+            background-color: #0098D4
+        }
+
+        .tube-waterloo-city {
+            background-color: #95CDBA
+        }
+
+        .trainPlatform {}
     </style>
 
     <script>
         function updateBoards() {
+            $.getJSON('/tubeStatus', {}, function(data) {
+                var statusTable = $('<ul>')
+                data.forEach(function(line) {
+                    console.log(line)
+                    var statusLine = $('<li><div>')
+                    statusLine.append($('<div>' + line.name + '</div>').addClass('tubeLabel').addClass('tube-' + line.id))
+                    statusLine.append($('<div>' + line.lineStatuses[0].statusSeverityDescription + '</div>').addClass('tubeServiceLevel'))
+                    statusLine.addClass('tubeStatusLine')
+                    statusTable.append(statusLine)
+                })
+                $('#tubeStatus').html(statusTable)
+            })
             $.getJSON('/trainDepartures', {}, function(data) {
-                console.log(data)
                 var trainBoard = $('<div>').addClass('trainBoard')
 
                 var board = data.GetStationBoardResult
@@ -93,14 +227,15 @@
                 var services = data.GetStationBoardResult.trainServices.service
                 var departureBoard = $('<ul>')
                 services.forEach(function(service) {
-                    console.log(service)
-                    var departure = $('<li>')
-                    departure.append($('<div>' + service.std + '</div>').addClass('trainTime'))
-                    departure.append($('<span>' + service.destination.location[0].locationName + '</span>'))
-                    departure.append($('<span> (Platform ' + service.platform + ')</span>').addClass('trainPlatform'))
-                    departure.append($('<span>( ' + service.etd + ' )</span>'))
-                    departure.append($('<div>' + service.operator + '</div>').addClass('toc').addClass('toc-' + service.operatorCode))
-                    departureBoard.append(departure)
+                    var myDeparture = $('<li>')
+                    myDeparture.append($('<div>' + service.std + '</div>').addClass('trainTime'))
+                    myDeparture.append($('<span>' + service.operator + '</span>').addClass('toc').addClass('toc-' + service.operatorCode))
+                    //myDeparture.append($('<span style="padding-left:12pt;padding-right:12pt"> to </span>'))
+                    myDeparture.append($('<span>' + service.destination.location[0].locationName + '</span>'))
+                    myDeparture.append($('<span> (Platform ' + service.platform + ')</span>').addClass('trainPlatform'))
+                    myDeparture.append($('<div> ( ' + service.etd + ' )</div>').addClass('trainEtd'))
+
+                    departureBoard.append(myDeparture)
                 })
                 trainBoard.append(departureBoard)
                 $('#trainDepartures').html(trainBoard)
@@ -126,7 +261,7 @@
                         myDeparture.append($('<span>' + departure.lineId + ' </span>').addClass('busNumber'))
                         myDeparture.append($('<span style="padding-left:12pt;">to</span>'))
                         myDeparture.append($('<span>' + departure.towards + '</span>').addClass('busTowards'))
-                        myDeparture.append($('<span> ' + departure.timeTill + '</span>').addClass('departure'))
+                        myDeparture.append($('<span> ' + departure.timeTill + '</span>').addClass('busDeparture'))
                         stop.append(myDeparture)
                     })
                     $('#busDepartures').append($('<h3>' + stopName + '</h3>').addClass('busStopHeader'))
@@ -143,13 +278,18 @@
 <body>
     <div class="container">
         <div class="page-header">
-            <h1>South London Makerspace Dashboard</h1>
+            <div id="msLogo">&nbsp;</div>
+            <h1>
+               South London Makerspace Dashboard</h1>
 
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <div style="width:260px">
+            <div class="col-md-3">
+                <h2>TfL Tube Status</h2>
+                <!--div style="width:260px">
                     <script language="JavaScript" src="https://www.tfl.gov.uk/tfl/syndication/widgets/serviceboard/embeddable/serviceboard-iframe-stretchy.js"></script>
+                </div-->
+                <div id="tubeStatus">
                 </div>
             </div>
             <div class="col-md-4">
@@ -157,7 +297,7 @@
                 <div id="busDepartures">
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <h2>Train Departures</h2>
                 <div id="trainDepartures">
                 </div>
