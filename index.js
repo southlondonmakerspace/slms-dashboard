@@ -46,6 +46,6 @@ app.use("*", (req, res) => {
     res.sendFile(path + "404.html");
 });
 
-app.listen(3000, () => {
-    console.log("Live at Port 3000");
+app.listen(config.httpPort, () => {
+    console.log("Live at Port " + config.httpPort);
 });
