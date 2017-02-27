@@ -9,24 +9,159 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script src="script.js"></script>
+    <style>
+        .stopHeader {
+            background-color: red;
+        }
+
+        h3.busStopHeader {
+            background-color: black;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        li.busStopDeparture {
+            padding: 10px;
+            list-style: none;
+            vertical-align: center;
+        }
+
+        .busNumber {
+            background-color: red;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            width: 32pt;
+            float: left;
+        }
+
+        .busTowards {
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .trainBoard {}
+
+        #trainDepartures ul {
+            list-style: none;
+        }
+
+        #trainDepartures ul li {
+            padding: 6pt;
+        }
+
+        .toc {
+            float: right;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .toc-SE {
+            background-color: #00afe8;
+        }
+
+        .toc-TL {
+            background-color: #e84aba;
+        }
+
+        .trainTime {
+            font-weight: bold;
+            width: 75px;
+            text-align: center;
+            float: left;
+        }
+        .trainPlatform {
+
+        }
+    </style>
+
+    <script>
+        function updateBoards() {
+            $.getJSON('/trainDepartures', {}, function(data) {
+                console.log(data)
+                var trainBoard = $('<div>').addClass('trainBoard')
+
+                var board = data.GetStationBoardResult
+                if (board.nrccMessages != undefined) {
+                    board.nrccMessages.message.forEach(function(message) {
+                        trainBoard.append($('<div role="alert">' + message + '</div>').addClass('alert').addClass('alert-warning'))
+                    })
+                }
+                trainBoard.append($('<h3>' + data.GetStationBoardResult.locationName + '</h3>'))
+                var stationName = data.GetStationBoardResult.locationName
+                var services = data.GetStationBoardResult.trainServices.service
+                var departureBoard = $('<ul>')
+                services.forEach(function(service) {
+                    console.log(service)
+                    var departure = $('<li>')
+                    departure.append($('<div>' + service.std + '</div>').addClass('trainTime'))
+                    departure.append($('<span>' + service.destination.location[0].locationName + '</span>'))
+                    departure.append($('<span> (Platform ' + service.platform + ')</span>').addClass('trainPlatform'))
+                    departure.append($('<span>( ' + service.etd + ' )</span>'))
+                    departure.append($('<div>' + service.operator + '</div>').addClass('toc').addClass('toc-' + service.operatorCode))
+                    departureBoard.append(departure)
+                })
+                trainBoard.append(departureBoard)
+                $('#trainDepartures').html(trainBoard)
+
+            })
+            $.getJSON('/busDepartures', {}, function(data) {
+                var stops = data
+                var seenStops = {}
+                stops.forEach(function(stop) {
+                    stop.forEach(function(departure) {
+                        var departureRow = $('<li>')
+                        if (seenStops[departure.platformName] == undefined) {
+                            seenStops[departure.platformName] = []
+                        }
+                        seenStops[departure.platformName].unshift(departure)
+                    })
+                })
+                Object.keys(seenStops).forEach(function(stopName) {
+                    var departures = seenStops[stopName]
+                    var stop = $('<div>').addClass('col').addClass('flex-unordered')
+                    departures.forEach(function(departure) {
+                        var myDeparture = $('<ul>').addClass('busStopDeparture')
+                        myDeparture.append($('<span>' + departure.lineId + ' </span>').addClass('busNumber'))
+                        myDeparture.append($('<span style="padding-left:12pt;">to</span>'))
+                        myDeparture.append($('<span>' + departure.towards + '</span>').addClass('busTowards'))
+                        myDeparture.append($('<span> ' + departure.timeTill + '</span>').addClass('departure'))
+                        stop.append(myDeparture)
+                    })
+                    $('#busDepartures').append($('<h3>' + stopName + '</h3>').addClass('busStopHeader'))
+                    $('#busDepartures').append(stop)
+                })
+            })
+        }
+        $('document').ready(function() {
+            updateBoards()
+        })
+    </script>
 </head>
 
 <body>
-    <div>
-        <div>
-            <nav class="navbar navbar-inverse" role="navigation" style="padding-left:130px;">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">South London Makerspace Dashboard<span class="sr-only"></span></a></li>
+    <div class="container">
+        <div class="page-header">
+            <h1>South London Makerspace Dashboard</h1>
 
-                </ul>
-            </nav>
         </div>
-        <br/>
-        <div class="jumbotron">
-            <p>
-                Hello, Makerspace!
-            </p>
+        <div class="row">
+            <div class="col-md-4">
+                <div style="width:260px">
+                    <script language="JavaScript" src="https://www.tfl.gov.uk/tfl/syndication/widgets/serviceboard/embeddable/serviceboard-iframe-stretchy.js"></script>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h2>Bus Departures</h2>
+                <div id="busDepartures">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h2>Train Departures</h2>
+                <div id="trainDepartures">
+                </div>
+            </div>
         </div>
     </div>
 </body>
