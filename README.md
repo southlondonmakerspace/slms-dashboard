@@ -1,5 +1,5 @@
 # South London Makerspace dashboard
-The purpose of this software is to provide a dashboard for display within the (South London Makerspace)[http://southlondonmakerspace.org]
+The purpose of this software is to provide a dashboard for display within the [South London Makerspace](http://southlondonmakerspace.org)
 
 It will ideally include:
  * Train/Bus departures from nearby
