@@ -10,21 +10,24 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <style>
         html,
-        body, .container {
-            padding:0;
-            margin:0;
-            margin-left:0px;
-            margin-top:0px;
+        body,
+        .container {
+            padding: 0;
+            margin: 0;
+            margin-left: 0px;
+            margin-top: 0px;
         }
+
         .row {
-           padding-left:5px;
-           padding-right:5px;
+            padding-left: 5px;
+            padding-right: 5px;
         }
+
         .page-header {
-           margin-top:0px;
-           padding-top:0px;
-           height:75px;
-           vertical-align: middle;
+            margin-top: 0px;
+            padding-top: 0px;
+            height: 75px;
+            vertical-align: middle;
         }
 
         #msLogo {
@@ -201,7 +204,7 @@
 
     <script>
         function updateBoards() {
-            $.getJSON('/tubeStatus', {}, function(data) {
+            /*$.getJSON('/tubeStatus', {}, function(data) {
                 var statusTable = $('<ul>')
                 data.forEach(function(line) {
                     console.log(line)
@@ -212,7 +215,7 @@
                     statusTable.append(statusLine)
                 })
                 $('#tubeStatus').html(statusTable)
-            })
+            })*/
             $.getJSON('/trainDepartures', {}, function(data) {
                 var trainBoard = $('<div>').addClass('trainBoard')
 
@@ -258,45 +261,42 @@
                     var services = {}
                     var stop = $('<div>').addClass('col').addClass('flex-unordered')
                     departures.forEach(function(departure) {
-                       if(services[departure.lineId+':'+departure.towards] == undefined)
-                       {
-                          services[departure.lineId+':'+departure.towards] = {
-                             lineId: departure.lineId,
-                             towards: departure.towards,
-                             services: []
-                          }
-                       }
-                       services[departure.lineId+':'+departure.towards].services.push(departure)
+                        if (services[departure.lineId + ':' + departure.towards] == undefined) {
+                            services[departure.lineId + ':' + departure.towards] = {
+                                lineId: departure.lineId,
+                                towards: departure.towards,
+                                services: []
+                            }
+                        }
+                        services[departure.lineId + ':' + departure.towards].services.push(departure)
 
                     })
-                    console.log(services)
-                    Object.keys(services).forEach(function (serviceId) {
-                       var service = services[serviceId]
-                       var lineId = service.lineId
-                       var myDeparture = $('<ul>').addClass('busStopDeparture')
-                       myDeparture.append($('<span>' + lineId + ' </span>').addClass('busNumber'))
-                       myDeparture.append($('<span style="padding-left:12pt;">to</span>'))
-                       myDeparture.append($('<span>' + service.towards + '</span>').addClass('busTowards'))
-                       var until = ""
-                       var i=service.services.length
-                       service.services.forEach(function (departure) {
-                          until += Math.floor((parseInt(departure.timeToStation))/60)
-                          i--
-                          if (i>0)
-                          {
-                             if (i!=0)
-                             {
-                                until += ', '
-                             } else {
-                                until += ' and '
-                             }
+                    //console.log(services)
+                    Object.keys(services).forEach(function(serviceId) {
+                        var service = services[serviceId]
+                        var lineId = service.lineId
+                        var myDeparture = $('<ul>').addClass('busStopDeparture')
+                        myDeparture.append($('<span>' + lineId + ' </span>').addClass('busNumber'))
+                        myDeparture.append($('<span style="padding-left:12pt;">to</span>'))
+                        myDeparture.append($('<span>' + service.towards + '</span>').addClass('busTowards'))
+                        var until = ""
+                        var i = service.services.length
+                        service.services.forEach(function(departure) {
+                            until += Math.floor((parseInt(departure.timeToStation)) / 60)
+                            i--
+                            if (i > 0) {
+                                if (i != 0) {
+                                    until += ', '
+                                } else {
+                                    until += ' and '
+                                }
 
-                          } else {
-                             until += ' minutes'
-                          }
-                       })
-                       myDeparture.append($('<span> ' + until + '</span>').addClass('busDeparture'))
-                       stop.append(myDeparture)
+                            } else {
+                                until += ' minutes'
+                            }
+                        })
+                        myDeparture.append($('<span> ' + until + '</span>').addClass('busDeparture'))
+                        stop.append(myDeparture)
                     })
 
                     $('#busDepartures').append($('<h3>' + stopName + '</h3>').addClass('busStopHeader'))
@@ -305,7 +305,35 @@
             })
         }
         $('document').ready(function() {
-            updateBoards()
+           // build the layout
+
+           // get a list of all the available widgets
+            $.getJSON('/widgets', {}, function(data) {
+                console.log(data)
+                data.forEach(function(widget) {
+                   // load the Javascript
+                   $.getScript('/' + widget + '/script.js')
+                   // load the HTML partial and stick it into an element named for-$widgetName
+                    console.log('/' + widget + '/widget.html')
+                    // load the CSS for this widget (if there is any)
+                    $.get('/' + widget + '/style.css', {}).done(function (data, textStatus, jqXHR) {
+                       $('<link>')
+                          .appendTo('head')
+                          .attr({
+                              type: 'text/css',
+                              rel: 'stylesheet',
+                              href: '/' + widget + '/style.css'
+                          });
+                    })
+                    $('#for-' + widget).load('/' + widget + '/widget.html', function(response, status, xhr) {
+                        if (status == "error") {
+                            var msg = "Sorry but there was an error loading the partial HTML ";
+                            console.log(msg)
+                        }
+                    })
+                })
+            });
+             updateBoards()
         })
     </script>
 </head>
@@ -319,13 +347,13 @@
 
         </div>
         <div class="row">
-            <div class="col-md-3">
-                <h2>TfL Tube Status</h2>
-                <!--div style="width:260px">
+            <div class="col-md-3" id="for-tubeStatus">
+                <!--<h2>TfL Tube Status</h2>
+                <div style="width:260px">
                     <script language="JavaScript" src="https://www.tfl.gov.uk/tfl/syndication/widgets/serviceboard/embeddable/serviceboard-iframe-stretchy.js"></script>
-                </div-->
-                <div id="tubeStatus">
                 </div>
+                <div id="tubeStatus">
+                </div>-->
             </div>
             <div class="col-md-4">
                 <h2>Bus Departures</h2>

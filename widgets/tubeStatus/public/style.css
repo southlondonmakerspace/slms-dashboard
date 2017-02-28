@@ -1,0 +1,71 @@
+#tubeStatus ul {
+    padding-left: 0;
+    list-style: none
+}
+
+#tubeStatus ul li {
+    padding: 0;
+    clear: both;
+}
+
+.tubeStatusLine {
+    padding: 8px;
+}
+
+.tubeLabel {
+    color: white;
+    font-weight: bold;
+    width: 120px;
+    text-align: center;
+    float: left;
+    padding: 2px;
+}
+
+.tubeServiceLevel {
+    text-align: right;
+    vertical-align: center;
+}
+
+.tube-bakerloo {
+    background-color: #B36305
+}
+
+.tube-central {
+    background-color: #E32017
+}
+
+.tube-circle {
+    background-color: #FFD300
+}
+
+.tube-district {
+    background-color: #00782A
+}
+
+.tube-jubilee {
+    background-color: #A0A5A9
+}
+
+.tube-hammersmith-city {
+    background-color: #F3A9BB
+}
+
+.tube-metropolitan {
+    background-color: #9B0056
+}
+
+.tube-northern {
+    background-color: #000000
+}
+
+.tube-piccadilly {
+    background-color: #003688
+}
+
+.tube-victoria {
+    background-color: #0098D4
+}
+
+.tube-waterloo-city {
+    background-color: #95CDBA
+}
