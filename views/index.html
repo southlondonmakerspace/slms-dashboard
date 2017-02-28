@@ -255,15 +255,50 @@
                 })
                 Object.keys(seenStops).forEach(function(stopName) {
                     var departures = seenStops[stopName]
+                    var services = {}
                     var stop = $('<div>').addClass('col').addClass('flex-unordered')
                     departures.forEach(function(departure) {
-                        var myDeparture = $('<ul>').addClass('busStopDeparture')
-                        myDeparture.append($('<span>' + departure.lineId + ' </span>').addClass('busNumber'))
-                        myDeparture.append($('<span style="padding-left:12pt;">to</span>'))
-                        myDeparture.append($('<span>' + departure.towards + '</span>').addClass('busTowards'))
-                        myDeparture.append($('<span> ' + departure.timeTill + '</span>').addClass('busDeparture'))
-                        stop.append(myDeparture)
+                       if(services[departure.lineId+':'+departure.towards] == undefined)
+                       {
+                          services[departure.lineId+':'+departure.towards] = {
+                             lineId: departure.lineId,
+                             towards: departure.towards,
+                             services: []
+                          }
+                       }
+                       services[departure.lineId+':'+departure.towards].services.push(departure)
+
                     })
+                    console.log(services)
+                    Object.keys(services).forEach(function (serviceId) {
+                       var service = services[serviceId]
+                       var lineId = service.lineId
+                       var myDeparture = $('<ul>').addClass('busStopDeparture')
+                       myDeparture.append($('<span>' + lineId + ' </span>').addClass('busNumber'))
+                       myDeparture.append($('<span style="padding-left:12pt;">to</span>'))
+                       myDeparture.append($('<span>' + service.towards + '</span>').addClass('busTowards'))
+                       var until = ""
+                       var i=service.services.length
+                       service.services.forEach(function (departure) {
+                          until += Math.floor((parseInt(departure.timeToStation))/60)
+                          i--
+                          if (i>0)
+                          {
+                             if (i!=0)
+                             {
+                                until += ', '
+                             } else {
+                                until += ' and '
+                             }
+
+                          } else {
+                             until += ' minutes'
+                          }
+                       })
+                       myDeparture.append($('<span> ' + until + '</span>').addClass('busDeparture'))
+                       stop.append(myDeparture)
+                    })
+
                     $('#busDepartures').append($('<h3>' + stopName + '</h3>').addClass('busStopHeader'))
                     $('#busDepartures').append(stop)
                 })

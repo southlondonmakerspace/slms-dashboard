@@ -1,4 +1,5 @@
 module.exports = {
+    'httpPort': 3000,
     'nrSecurityToken': 'my-securitty-token',
     'nrLDBWSurl': 'https://lite.realtime.nationalrail.co.uk/OpenLDBWS/wsdl.aspx?ver=2016-02-16',
     'busStopNAPTANIDs': [
