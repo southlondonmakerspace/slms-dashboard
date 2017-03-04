@@ -1,0 +1,33 @@
+#trainDepartures ul li {
+    padding: 6pt;
+}
+
+.toc {
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 10px 0 10px;
+}
+/* Train Operator colours */
+/* https://en.wikipedia.org/wiki/Wikipedia:WikiProject_UK_Railways/Colours_list */
+
+.toc-SE {
+    background-color: #00afe8;
+}
+
+.toc-TL {
+    background-color: #e84aba;
+}
+
+.trainTime {
+    font-weight: bold;
+    width: 32pt;
+    text-align: center;
+    float: left;
+}
+
+.trainEtd {
+    float: right;
+    font-weight: bold;
+}
+
+.trainPlatform {}

@@ -2,69 +2,64 @@ const config = require('./config')
 
 const DeparturesBoard = require('./lib/darwinDeparturesBoard')
 const TFLAPI = require('./lib/tflAPI')
+const fs = require('fs')
+const path = require('path')
+const bunyan  = require('bunyan')
 
-var depBoard = new DeparturesBoard(config.nrLDBWSurl, config.nrSecurityToken)
-var tfl = new TFLAPI()
 
 var express = require("express");
+
+const log = bunyan.createLogger({name: 'slms-dashboard'});
+
 var app = express();
 var router = express.Router();
-var path = __dirname + '/views/';
+var viewPath = __dirname + '/views/';
 var activeWidgets = []
 
 router.get("/", (req, res) => {
-    res.sendFile(path + "index.html");
+    res.sendFile(viewPath + "index.html");
 });
 
-router.get('/trainDepartures', (req, res) => {
-    depBoard.lookupDepBoard(config.stationCRS).then(
-        (result) => {
-            res.end(JSON.stringify(result))
-        }).catch(
-        (error) => {
-            res.end('error' + error)
-        })
-})
-
-router.get('/busDepartures', (req, res) => {
-   var lookupPromises = []
-   config.busStopNAPTANIDs.forEach( (naptan) => {
-      lookupPromises.push(tfl.lookupBusDepartures(naptan))
+// load all of the available widgets
+fs.readdir(path.join(__dirname,'/widgets'), (err, entries) => {
+   if (err)
+   {
+      log.error("Can't load widgets: " + err)
+      process.exit(5)
+   }
+   entries.forEach( (entry) => {
+      var widgetName = entry
+      fs.stat(path.join(__dirname,'/widgets/', entry), (err, stats) => {
+         if (err)
+         {
+            log.error("Couldn't stat entry " + entry + ": " + err)
+         }
+         if (stats.isDirectory())
+         {
+            var widgetPath = path.join(__dirname,'/widgets/', entry)
+            log.info('Found widget:', widgetName, widgetPath)
+            require(path.join(widgetPath,'routes.js'))(router)
+            router.get('/' + widgetName + '/widget.html', function(req, res) {
+                res.sendFile(path.join(widgetPath,'widget.html'))
+            })
+            router.use('/' + entry + '/', express.static(path.join(widgetPath,'public')))
+            router.get('/' + entry + '/.*', express.static(path.join(widgetPath,'public')))
+            activeWidgets.push(widgetName)
+         }
+      })
    })
-    Promise.all(lookupPromises).then(
-        (results) => {
-            res.end(JSON.stringify(results))
-        }
-    ).catch((error) => {
-        res.end('error:' + error)
-    })
 })
-/*router.get('/tubeStatus', (req, res) => {
-   tfl.lookupStatuses('tube').then ( (data) => {
-      res.end(JSON.stringify(data))
-   }).catch((error) =>{
-      res.end('error')
-   })
-})*/
-
-//// TODO: make this load things dynamically somehow
-require('./widgets/tubeStatus/routes.js')(router)
-router.get('/tubeStatus/widget.html',function (req, res) {
-   res.sendFile(__dirname + '/widgets/tubeStatus/widget.html')
-})
-router.use('/tubeStatus/', express.static('./widgets/tubeStatus/public'))
-router.get('/tubeStatus/.*', express.static('./widgets/tubeStatus/public'))
-activeWidgets.push('tubeStatus')
 
 // provide a list of all widgets
-router.get('/widgets', function (req, res) {
-   res.end(JSON.stringify(activeWidgets))
+router.get('/widgets', function(req, res) {
+    res.end(JSON.stringify(activeWidgets))
 })
 
-router.get('/layout', function (req, res) {
-   // serve a layout structure for the page to render
+router.get('/layout', function(req, res) {
+   //TODO: make this actually do something :)
+    // serve a layout structure for the page to render
 })
-
+app.use(require('express-bunyan-logger').errorLogger());
 app.use("/", router);
 app.use(express.static('public'))
 

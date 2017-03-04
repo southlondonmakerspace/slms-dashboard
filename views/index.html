@@ -50,290 +50,84 @@
             font-size: 12pt;
         }
 
-        .stopHeader {
-            background-color: red;
-        }
-
-        #busDepartures ul {
-            padding-left: 0;
-        }
-
-        h3.busStopHeader {
-            background-color: black;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        li.busStopDeparture {
-            padding: 10px;
-            list-style: none;
-            vertical-align: center;
-            margin-left: 0;
-        }
-
-        .busDeparture {
-            float: right;
-        }
-
-        .busNumber {
-            background-color: red;
-            color: white;
-            border-radius: 5px;
-            text-align: center;
-            width: 32pt;
-            float: left;
-        }
-
-        .busTowards {
-            padding: 10px;
-            font-weight: bold;
-        }
-
         #trainDepartures ul {
             list-style: none;
             padding-left: 0;
         }
-
-        #trainDepartures ul li {
-            padding: 6pt;
-        }
-
-        .toc {
-            border-radius: 5px;
-            padding: 5px;
-            margin: 0 10px 0 10px;
-        }
-        /* Train Operator colours */
-        /* https://en.wikipedia.org/wiki/Wikipedia:WikiProject_UK_Railways/Colours_list */
-
-        .toc-SE {
-            background-color: #00afe8;
-        }
-
-        .toc-TL {
-            background-color: #e84aba;
-        }
-
-        .trainTime {
-            font-weight: bold;
-            width: 32pt;
-            text-align: center;
-            float: left;
-        }
-
-        .trainEtd {
-            float: right;
-            font-weight: bold;
-        }
-
-        #tubeStatus ul {
-            padding-left: 0;
-            list-style: none
-        }
-
-        #tubeStatus ul li {
-            padding: 0;
-            clear: both;
-        }
-
-        .tubeStatusLine {
-            padding: 8px;
-        }
-
-        .tubeLabel {
-            color: white;
-            font-weight: bold;
-            width: 120px;
-            text-align: center;
-            float: left;
-            padding: 2px;
-        }
-
-        .tubeServiceLevel {
-            text-align: right;
-            vertical-align: center;
-        }
-
-        .tube-bakerloo {
-            background-color: #B36305
-        }
-
-        .tube-central {
-            background-color: #E32017
-        }
-
-        .tube-circle {
-            background-color: #FFD300
-        }
-
-        .tube-district {
-            background-color: #00782A
-        }
-
-        .tube-jubilee {
-            background-color: #A0A5A9
-        }
-
-        .tube-hammersmith-city {
-            background-color: #F3A9BB
-        }
-
-        .tube-metropolitan {
-            background-color: #9B0056
-        }
-
-        .tube-northern {
-            background-color: #000000
-        }
-
-        .tube-piccadilly {
-            background-color: #003688
-        }
-
-        .tube-victoria {
-            background-color: #0098D4
-        }
-
-        .tube-waterloo-city {
-            background-color: #95CDBA
-        }
-
-        .trainPlatform {}
     </style>
 
     <script>
-        function updateBoards() {
-            /*$.getJSON('/tubeStatus', {}, function(data) {
-                var statusTable = $('<ul>')
-                data.forEach(function(line) {
-                    console.log(line)
-                    var statusLine = $('<li><div>')
-                    statusLine.append($('<div>' + line.name + '</div>').addClass('tubeLabel').addClass('tube-' + line.id))
-                    statusLine.append($('<div>' + line.lineStatuses[0].statusSeverityDescription + '</div>').addClass('tubeServiceLevel'))
-                    statusLine.addClass('tubeStatusLine')
-                    statusTable.append(statusLine)
-                })
-                $('#tubeStatus').html(statusTable)
-            })*/
-            $.getJSON('/trainDepartures', {}, function(data) {
-                var trainBoard = $('<div>').addClass('trainBoard')
-
-                var board = data.GetStationBoardResult
-                if (board.nrccMessages != undefined) {
-                    board.nrccMessages.message.forEach(function(message) {
-                        trainBoard.append($('<div role="alert">' + message + '</div>').addClass('alert').addClass('alert-warning'))
-                    })
-                }
-                trainBoard.append($('<h3>' + data.GetStationBoardResult.locationName + '</h3>'))
-                var stationName = data.GetStationBoardResult.locationName
-                var services = data.GetStationBoardResult.trainServices.service
-                var departureBoard = $('<ul>')
-                services.forEach(function(service) {
-                    var myDeparture = $('<li>')
-                    myDeparture.append($('<div>' + service.std + '</div>').addClass('trainTime'))
-                    myDeparture.append($('<span>' + service.operator + '</span>').addClass('toc').addClass('toc-' + service.operatorCode))
-                    //myDeparture.append($('<span style="padding-left:12pt;padding-right:12pt"> to </span>'))
-                    myDeparture.append($('<span>' + service.destination.location[0].locationName + '</span>'))
-                    myDeparture.append($('<span> (Platform ' + service.platform + ')</span>').addClass('trainPlatform'))
-                    myDeparture.append($('<div> ( ' + service.etd + ' )</div>').addClass('trainEtd'))
-
-                    departureBoard.append(myDeparture)
-                })
-                trainBoard.append(departureBoard)
-                $('#trainDepartures').html(trainBoard)
-
-            })
-            $.getJSON('/busDepartures', {}, function(data) {
-                var stops = data
-                var seenStops = {}
-                stops.forEach(function(stop) {
-                    stop.forEach(function(departure) {
-                        var departureRow = $('<li>')
-                        if (seenStops[departure.platformName] == undefined) {
-                            seenStops[departure.platformName] = []
-                        }
-                        seenStops[departure.platformName].unshift(departure)
-                    })
-                })
-                Object.keys(seenStops).forEach(function(stopName) {
-                    var departures = seenStops[stopName]
-                    var services = {}
-                    var stop = $('<div>').addClass('col').addClass('flex-unordered')
-                    departures.forEach(function(departure) {
-                        if (services[departure.lineId + ':' + departure.towards] == undefined) {
-                            services[departure.lineId + ':' + departure.towards] = {
-                                lineId: departure.lineId,
-                                towards: departure.towards,
-                                services: []
-                            }
-                        }
-                        services[departure.lineId + ':' + departure.towards].services.push(departure)
-
-                    })
-                    //console.log(services)
-                    Object.keys(services).forEach(function(serviceId) {
-                        var service = services[serviceId]
-                        var lineId = service.lineId
-                        var myDeparture = $('<ul>').addClass('busStopDeparture')
-                        myDeparture.append($('<span>' + lineId + ' </span>').addClass('busNumber'))
-                        myDeparture.append($('<span style="padding-left:12pt;">to</span>'))
-                        myDeparture.append($('<span>' + service.towards + '</span>').addClass('busTowards'))
-                        var until = ""
-                        var i = service.services.length
-                        service.services.forEach(function(departure) {
-                            until += Math.floor((parseInt(departure.timeToStation)) / 60)
-                            i--
-                            if (i > 0) {
-                                if (i != 0) {
-                                    until += ', '
-                                } else {
-                                    until += ' and '
-                                }
-
+        /*        function departureList(arrayOfTimes) {
+                    var until = ""
+                    var i = 0
+                    arrayOfTimes.forEach(function(time) {
+                        until = +Math.floor((parseInt(time)) / 60)
+                        i--
+                        if (i > 0) {
+                            if (i != 1) {
+                                until += ', '
                             } else {
-                                until += ' minutes'
+                                until += ' and '
                             }
-                        })
-                        myDeparture.append($('<span> ' + until + '</span>').addClass('busDeparture'))
-                        stop.append(myDeparture)
+
+                        } else {
+                            until += ' minutes'
+                        }
                     })
+                    return until
 
-                    $('#busDepartures').append($('<h3>' + stopName + '</h3>').addClass('busStopHeader'))
-                    $('#busDepartures').append(stop)
-                })
+                } */
+
+        function updateBoards() {
+            widgetUpdates.forEach(function(fn) {
+                fn()
             })
-        }
-        $('document').ready(function() {
-           // build the layout
 
-           // get a list of all the available widgets
+        }
+        var widgetUpdates = []
+        $('document').ready(function() {
+            // build the layout
+
+            // get a list of all the available widgets
             $.getJSON('/widgets', {}, function(data) {
                 console.log(data)
                 data.forEach(function(widget) {
-                   // load the Javascript
-                   $.getScript('/' + widget + '/script.js')
-                   // load the HTML partial and stick it into an element named for-$widgetName
-                    console.log('/' + widget + '/widget.html')
+                    console.log(widget)
+                    // load the Javascript
+                    $.getScript('/' + widget + '/script.js', function() {
+                        console.log('[' + widget + ']' + ": loaded script successfully")
+                    }).fail(function(jqxhr, settings, exception) {
+                        console.error('[' + widget + ']' + ":  error loading script, " + exception)
+                    })
+                    // load the HTML partial and stick it into an element named for-$widgetName
                     // load the CSS for this widget (if there is any)
-                    $.get('/' + widget + '/style.css', {}).done(function (data, textStatus, jqXHR) {
-                       $('<link>')
-                          .appendTo('head')
-                          .attr({
-                              type: 'text/css',
-                              rel: 'stylesheet',
-                              href: '/' + widget + '/style.css'
-                          });
+                    $.get('/' + widget + '/style.css', {}).done(function(data, textStatus, jqXHR) {
+                        console.log('[' + widget + ']'  + ": loaded css successfully")
+                        $('<link>')
+                            .appendTo('head')
+                            .attr({
+                                type: 'text/css',
+                                rel: 'stylesheet',
+                                href: '/' + widget + '/style.css'
+                            });
                     })
                     $('#for-' + widget).load('/' + widget + '/widget.html', function(response, status, xhr) {
                         if (status == "error") {
                             var msg = "Sorry but there was an error loading the partial HTML ";
-                            console.log(msg)
+                            console.log('[' + widget + ']:' + msg)
+                        } else {
+                            console.log('[' + widget + ']'  + ": loaded html partial successfully")
                         }
                     })
                 })
+                setInterval(function() {
+                    updateBoards()
+                }, 30 * 1000)
+                setTimeout(function() {
+                    updateBoards()
+                }, 1000)
+
             });
-             updateBoards()
         })
     </script>
 </head>
@@ -355,15 +149,11 @@
                 <div id="tubeStatus">
                 </div>-->
             </div>
-            <div class="col-md-4">
-                <h2>Bus Departures</h2>
-                <div id="busDepartures">
-                </div>
+            <div class="col-md-4" id="for-busDepartures">
+
             </div>
-            <div class="col-md-5">
-                <h2>Train Departures</h2>
-                <div id="trainDepartures">
-                </div>
+            <div class="col-md-5" id="for-trainDepartures">
+
             </div>
         </div>
     </div>

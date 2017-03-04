@@ -1,0 +1,76 @@
+.stopHeader {
+    background-color: red;
+}
+
+#busDepartures ul {
+    padding-left: 0;
+}
+
+h3.busStopHeader {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+li.busStopDeparture {
+    padding: 10px;
+    list-style: none;
+    vertical-align: center;
+    margin-left: 0;
+}
+
+.busDeparture {
+    float: right;
+}
+
+.busNumber {
+    background-color: red;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    width: 32pt;
+    float: left;
+}
+
+.busTowards {
+    padding: 10px;
+    font-weight: bold;
+}
+
+.circle-icon {
+    display: inline-block;
+    border-radius: 50%;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 3;
+    color: #fff;
+    height: 32px;
+    min-width: 30px;
+    line-height: 32px;
+    text-align: center;
+    padding-top: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0px 4px;
+    overflow: hidden;
+    border-radius: 0;
+    margin-left: -1px;
+}
+
+.circle-icon.red:after {
+    background-color: #C33;
+}
+
+.circle-icon:after {
+    content: "";
+    position: absolute;
+    display: block;
+    border-radius: 24px;
+    height: 24px;
+    left: 2px;
+    right: 2px;
+    z-index: -1;
+    top: 3px;
+    border-bottom: 2px solid #ccc;
+}
