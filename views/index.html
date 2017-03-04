@@ -80,7 +80,7 @@
                     }).fail(function(jqxhr, settings, exception) {
                         console.error('[' + widget + ']' + ":  error loading script, " + exception)
                     })
-                    // load the HTML partial and stick it into an element named for-$widgetName
+
                     // load the CSS for this widget (if there is any)
                     $.get('/' + widget + '/style.css', {}).done(function(data, textStatus, jqXHR) {
                         console.log('[' + widget + ']'  + ": loaded css successfully")
@@ -92,6 +92,7 @@
                                 href: '/' + widget + '/style.css'
                             });
                     })
+                    // load the HTML partial and stick it into an element named for-$widgetName
                     $('#for-' + widget).load('/' + widget + '/widget.html', function(response, status, xhr) {
                         if (status == "error") {
                             var msg = "Sorry but there was an error loading the partial HTML ";
