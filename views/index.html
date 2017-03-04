@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>South London Makerspace Dashboard</title>
-    <script src="/bower_components/angular/angular.min.js"></script>
+
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <script src="/bower_components/boostrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <style>
         html,
         body,
@@ -41,49 +42,28 @@
             padding: 10px;
             margin-right: 20px;
         }
-
-        h2 {
-            font-size: 13pt;
-        }
-
-        h3 {
-            font-size: 12pt;
-        }
-
-        #trainDepartures ul {
-            list-style: none;
-            padding-left: 0;
-        }
     </style>
 
     <script>
+        var dashboard = angular.module('slmsDashboard', [])
 
         function updateBoards() {
             widgetUpdates.forEach(function(fn) {
                 fn()
             })
-
         }
 
         var widgetUpdates = []
-        $('document').ready(function() {
-            // build the layout
 
-            // get a list of all the available widgets
-            $.getJSON('/widgets', {}, function(data) {
-                console.log(data)
-                data.forEach(function(widget) {
-                    console.log(widget)
-                    // load the Javascript
-                    $.getScript('/' + widget + '/script.js', function() {
-                        console.log('[' + widget + ']' + ": loaded script successfully")
-                    }).fail(function(jqxhr, settings, exception) {
-                        console.error('[' + widget + ']' + ":  error loading script, " + exception)
-                    })
-
+        // get a list of all the available widgets
+        $.getJSON('/widgets', {}, function(data) {
+            // make some promises - when all widgets have completed loading ...
+            var widgetPromises = []
+            data.forEach(function(widget) {
+                widgetPromises.push(new Promise(function(fulfil, reject) {
                     // load the CSS for this widget (if there is any)
                     $.get('/' + widget + '/style.css', {}).done(function(data, textStatus, jqXHR) {
-                        console.log('[' + widget + ']'  + ": loaded css successfully")
+                        console.log('[' + widget + ']' + ": loaded css successfully")
                         $('<link>')
                             .appendTo('head')
                             .attr({
@@ -91,25 +71,40 @@
                                 rel: 'stylesheet',
                                 href: '/' + widget + '/style.css'
                             });
+                    }).fail(function(jqxhr, settings, exception) {
+                        console.error('[' + widget + ']' + ":  error loading script, " + exception)
+                    });
+                    $.getScript('/' + widget + '/script.js', function() {
+                        console.log('[' + widget + ']' + ": loaded script successfully")
+                        $('#for-' + widget).load('/' + widget + '/widget.html', function(response, status, xhr) {
+                            if (status == "error") {
+                                var msg = "Sorry but there was an error loading the partial HTML ";
+                                console.log('[' + widget + ']:' + msg)
+                                reject()
+                            } else {
+                                console.log('[' + widget + ']' + ": loaded html partial successfully")
+                                // load the Javascript
+                                fulfil()
+
+                            }
+                        })
                     })
                     // load the HTML partial and stick it into an element named for-$widgetName
-                    $('#for-' + widget).load('/' + widget + '/widget.html', function(response, status, xhr) {
-                        if (status == "error") {
-                            var msg = "Sorry but there was an error loading the partial HTML ";
-                            console.log('[' + widget + ']:' + msg)
-                        } else {
-                            console.log('[' + widget + ']'  + ": loaded html partial successfully")
-                        }
-                    })
-                })
-                setInterval(function() {
-                    updateBoards()
-                }, 30 * 1000)
-                setTimeout(function() {
-                    updateBoards()
-                }, 1000)
 
-            });
+                }))
+            })
+            Promise.all(widgetPromises).then(function () {
+               angular.element(document).ready(function() {
+                   angular.bootstrap(document, ['slmsDashboard']);
+               });
+               setInterval(function() {
+                   updateBoards()
+               }, 30 * 1000)
+               setTimeout(function() {
+                   updateBoards()
+               }, 1000)
+            })
+
         })
     </script>
 </head>
@@ -118,9 +113,7 @@
     <div class="container">
         <div class="page-header">
             <div id="msLogo">&nbsp;</div>
-            <h1>
-               South London Makerspace Dashboard</h1>
-
+            <h1>South London Makerspace Dashboard</h1>
         </div>
         <div class="row">
             <div class="col-md-3" id="for-tubeStatus">

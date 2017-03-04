@@ -1,36 +1,42 @@
-widgetUpdates.push(function() {
-    $.getJSON('/trainDepartures', {}, function(data) {
-        console.log('trainBoard running')
-        var trainBoard = $('<div>').addClass('trainBoard')
-
-        var board = data.GetStationBoardResult
-        if (board.nrccMessages != undefined) {
-            board.nrccMessages.message.forEach(function(message) {
-                trainBoard.append($('<div role="alert">' + message + '</div>').addClass('alert').addClass('alert-warning'))
+//widgetUpdates.push(function() {
+var dashboard = angular.module('slmsDashboard')
+dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval',
+    function($scope, $http, $interval) {
+        $scope.departures = []
+        $interval(function() {
+           updateBoard()
+        }, 10000)
+        function updateBoard() {
+            $http.get('/trainDepartures').then(function(result) {
+                var board = result.data.GetStationBoardResult
+                if (board == undefined) {
+                    console.error(board)
+                    return
+                }
+                if (board.nrccMessages != undefined) {
+                   $scope.message = ""
+                   $scope.showMessage = true
+                    board.nrccMessages.message.forEach(function(message) {
+                        $scope.message += "..." + message
+                    })
+                } else {
+                   $scope.showMessage = false
+                }
+                $scope.locationName = board.locationName
+                var departures = []
+                board.trainServices.service.forEach(function(departure) {
+                    var modified = departure
+                    if (departure.destination.location.constructor === Array) {
+                        modified.destinationName = departure.destination.location[0].locationName
+                    } else {
+                        modified.destinationName = departure.destination.location.locationName
+                    }
+                    departures.push(modified)
+                })
+                $scope.departures = departures
+                console.log($scope.departures)
             })
         }
-        trainBoard.append($('<h3>' + data.GetStationBoardResult.locationName + '</h3>'))
-        var stationName = data.GetStationBoardResult.locationName
-        var services = data.GetStationBoardResult.trainServices.service
-        var departureBoard = $('<ul>')
-        services.forEach(function(service) {
-            var myDeparture = $('<li>')
-            myDeparture.append($('<div>' + service.std + '</div>').addClass('trainTime'))
-            myDeparture.append($('<span>' + service.operator + '</span>').addClass('toc').addClass('toc-' + service.operatorCode))
-            //myDeparture.append($('<span style="padding-left:12pt;padding-right:12pt"> to </span>'))
-            if (service.destination.location.constructor === Array) {
-                myDeparture.append($('<span>' + service.destination.location[0].locationName + '</span>'))
-            } else {
-                myDeparture.append($('<span>' + service.destination.location.locationName + '</span>'))
-            }
-
-            myDeparture.append($('<span> (Platform ' + service.platform + ')</span>').addClass('trainPlatform'))
-            myDeparture.append($('<div> ( ' + service.etd + ' )</div>').addClass('trainEtd'))
-
-            departureBoard.append(myDeparture)
-        })
-        trainBoard.append(departureBoard)
-        $('#trainDepartures').html(trainBoard)
-
-    })
-})
+        updateBoard()
+    }
+])

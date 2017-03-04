@@ -5,7 +5,7 @@ const TFLAPI = require('./lib/tflAPI')
 const fs = require('fs')
 const path = require('path')
 const bunyan  = require('bunyan')
-
+const bunyanRequest = require('bunyan-request');
 
 var express = require("express");
 
@@ -17,7 +17,7 @@ var viewPath = __dirname + '/views/';
 var activeWidgets = []
 
 router.get("/", (req, res) => {
-    res.sendFile(viewPath + "index.html");
+    res.sendFile(path.join(viewPath,"index.html"));
 });
 
 // load all of the available widgets
@@ -59,8 +59,8 @@ router.get('/layout', function(req, res) {
    //TODO: make this actually do something :)
     // serve a layout structure for the page to render
 })
-app.use(require('express-bunyan-logger').errorLogger());
-app.use('/bower_components', express.static(path.join(__dirname, 'bower_components/')))
+app.use(bunyanRequest({ logger: bunyan.createLogger({name: "slms-dashboard-http", headerName: 'x-request-id'})}));
+app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')))
 app.use("/", router);
 app.use(express.static('public'))
 

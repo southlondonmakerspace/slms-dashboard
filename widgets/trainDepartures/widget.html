@@ -1,3 +1,14 @@
 <h2>Train Departures</h2>
-<div id="trainDepartures">
+<div ng-controller="TrainDepartureController">
+   <h4>{{locationName}}</h4>
+   <div role="alert" class="alert alert-warning" ng-if="showMessage">{{message}}</div>
+   <ul class="unstyled">
+      <li ng-repeat="service in departures" class="list-unstyled">
+         <div class="trainTime">{{service.std}}</div>
+         <span class="toc toc-{{service.operatorCode}}">{{service.operator}}</span>
+         <span>{{service.destinationName}}</span>
+         <span class="trainPlatform">(Platform {{service.platform}})</span>
+         <div class="trainEtd">{{service.etd}}</div>
+      </li>
+   </ul>
 </div>
