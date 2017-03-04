@@ -60,6 +60,7 @@ router.get('/layout', function(req, res) {
     // serve a layout structure for the page to render
 })
 app.use(require('express-bunyan-logger').errorLogger());
+app.use('/bower_components', express.static(path.join(__dirname, 'bower_components/')))
 app.use("/", router);
 app.use(express.static('public'))
 

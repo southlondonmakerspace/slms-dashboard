@@ -1,0 +1,22 @@
+{
+  "name": "slms-dashboard",
+  "description": "A dashboard display for the South London Makerspace",
+  "main": "index.js",
+  "authors": [
+    "Chris Roberts"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/southlondonmakerspace/slms-dashboard",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "angular": "angularjs#^1.6.2",
+    "bootstrap": "^3.3.7"
+  }
+}
