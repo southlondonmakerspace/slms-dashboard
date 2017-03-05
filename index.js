@@ -65,7 +65,7 @@ app.use("/", router);
 app.use(express.static('public'))
 
 app.use("*", (req, res) => {
-    res.sendFile(path + "404.html");
+    res.sendFile(__dirname + "404.html");
 });
 
 app.listen(config.httpPort, () => {
