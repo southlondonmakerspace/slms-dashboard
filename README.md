@@ -17,8 +17,8 @@ We're using the oldskool method of a config.js file to do the configuration. You
              'nrSecurityToken': 'xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx', // this is a security token from OpenLDBWS
              'nrLDBWSurl': 'https://lite.realtime.nationalrail.co.uk/OpenLDBWS/wsdl.aspx?ver=2016-02-16', // this is the SOAP endpoint for LWDB
              'tfl': {
-               'appId': '4956cbd5',
-               'appKey': 'd8953c733c2bac141c6b2ce3fe6b4d59'
+               'appId': 'xxxxx',
+               'appKey': 'xxxxx'
             },
              'lat': 51.451860, // latitude and longitude of the space
              'lon': -0.100861,
@@ -27,7 +27,7 @@ We're using the oldskool method of a config.js file to do the configuration. You
          }
 
 ## Installing
-You'll need bower, as well. 
+You'll need bower, as well.
 
          npm install
          bower install
