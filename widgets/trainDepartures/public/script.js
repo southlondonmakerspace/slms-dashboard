@@ -10,7 +10,7 @@ dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval'
             $http.get('/trainDepartures').then(function(result) {
                 var board = result.data.GetStationBoardResult
                 if (board == undefined) {
-                    console.error(board)
+                    console.error('[trainDepartures] invalid board recieved',result.data)
                     return
                 }
                 if (board.nrccMessages != undefined) {
@@ -34,7 +34,7 @@ dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval'
                     departures.push(modified)
                 })
                 $scope.departures = departures
-                console.log($scope.departures)
+                console.log('[trainDepartures] new departures',$scope.departures)
             })
         }
         updateBoard()

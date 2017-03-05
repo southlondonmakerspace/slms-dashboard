@@ -6,6 +6,11 @@
          {{nowEvent.start | date : 'HH:mm'}} - {{nowEvent.end | date : 'HH:mm'}}
       </p>
    </div>
+   <div ng-show="!now.length" class="nowNextNowEvent">
+      <!-- no events right now -->
+      <h4>Nothing right now</h4>
+      <p>Upcoming events below...</p>
+   </div>
     <h4>Coming later...</h4>
     <ol class="list-unstyled">
         <li ng-repeat="nextEvent in next | limitTo: 3" class="nowNextNextEvent">
