@@ -1,4 +1,9 @@
-var dashboard = angular.module('slmsDashboard', [])
+var dashboard = angular.module('slmsDashboard', ['ds.clock'])
+
+dashboard.controller('HeaderController', ['$scope', '$timeout',
+    function($scope) {
+
+])
 
 function updateBoards() {
     widgetUpdates.forEach(function(fn) {
@@ -49,7 +54,7 @@ $.getJSON('/widgets', {}, function(data) {
                 // load the HTML partial and stick it into an element named for-$widgetName
 
             } else {
-               fulfil()
+                fulfil()
             }
         }))
     })
