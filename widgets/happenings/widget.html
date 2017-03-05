@@ -1,0 +1,17 @@
+<h3>Events</h3>
+<div ng-controller="NowAndNextController">
+   <div ng-repeat="nowEvent in now" class="nowNextNowEvent">
+      <h4>Now: {{nowEvent.summary}}</h4>
+      <p>
+         {{nowEvent.start | date : 'HH:mm'}} - {{nowEvent.end | date : 'HH:mm'}}
+      </p>
+   </div>
+    <h4>Coming later...</h4>
+    <ol class="list-unstyled">
+        <li ng-repeat="nextEvent in next | limitTo: 3" class="nowNextNextEvent">
+            <strong>{{nextEvent.summary}}</strong>
+            <p><span>{{nextEvent.start | date : 'd LLLL'}}</span>
+            <span>{{nextEvent.start | date : 'HH:mm'}} - {{nextEvent.end | date : 'HH:mm'}}</span></p>
+        </li>
+    </ol>
+</div>

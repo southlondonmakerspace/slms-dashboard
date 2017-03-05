@@ -1,25 +1,48 @@
-html,
+
 body {
-    padding: 0;
     margin: 0;
-    margin-left: 0px;
-    margin-top: 0px;
+    font-family:"Source Sans Pro", sans-serif;
 }
 
 
 .page-header {
-    height: 75px;
+    height: 64px;
     vertical-align: bottom;
+    margin:0;
+    padding:0;
+    /*border-bottom:2px solid rgb(225,225,225);*/
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,0.25);
 }
 
+.page-header h1 {
+   margin-top:0;
+   margin-left:76px;
+   height:64px;
+   font-weight:bold;
+   line-height: 64px;
+   vertical-align:bottom;
+   font-size:18pt;
+}
+
+h2 {
+   font-size:16pt;
+   line-height:16pt;
+}
+h3 {
+   font-size:14pt;
+      line-height:14pt;
+}
+h4 {
+   font-size:12pt;
+}
 #msLogo {
-    background-image: url(/Logomark.png);
+   display:block;
+    background-image: url(/small.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-color: red;
-    width: 75px;
-    height: 75px;
-    float: left;
-    padding: 10px;
-    margin-right: 20px;
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    margin:0;
+    float:left;
 }
