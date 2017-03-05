@@ -11,19 +11,26 @@ It will ideally include:
 ## Configuration
 We're using the oldskool method of a config.js file to do the configuration. You'll need to create this before you run it. There's an example shown in config.example.js (just rename it to config.js and edit it).  It should look something like this:
 
+
          module.exports = {
-             'httpPort': 3000,
-             'nrSecurityToken': 'my-securitty-token', // this is a security token from OpenLDBWS http://realtime.nationalrail.co.uk/OpenLDBWSRegistration
+            'httpPort': 3000,
+             'nrSecurityToken': 'xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx', // this is a security token from OpenLDBWS
              'nrLDBWSurl': 'https://lite.realtime.nationalrail.co.uk/OpenLDBWS/wsdl.aspx?ver=2016-02-16', // this is the SOAP endpoint for LWDB
-             'stationCRS': 'HNH' // this is the CRS code of the station you want to display the departure board for
-             'busStopNAPTANIDs': [ // these are the bus stop NAPTAN IDs for some nearby bus stops.
-                 '490001149B',
-                 '490015248C',
-                 '490001149L',
-                 '490001149N'
-             ]
+             'tfl': {
+               'appId': '4956cbd5',
+               'appKey': 'd8953c733c2bac141c6b2ce3fe6b4d59'
+            },
+             'lat': 51.451860, // latitude and longitude of the space
+             'lon': -0.100861,
+             'stationCRS': 'HNH',// this is the CRS code of the station you want to display the departure board for
+             'icalAddress': 'https://calendar.google.com/calendar/ical/6hnjp743rq7omi2qfr3fa873ug%40group.calendar.google.com/public/basic.ics'
          }
 
+## Installing
+You'll need bower, as well. 
+
+         npm install
+         bower install
 ## Running
 You can run this by doing the following:
 
