@@ -1,44 +1,33 @@
-.stopHeader {
-    background-color: red;
+.busStopHeader {
+    position: relative;
+    padding: 5px 0 10px 10px;
+    padding-left: 35px;
+    min-height: 40px;
+    padding-right: 70px;
+    font-size: 20px;
 }
 
-#busDepartures ul {
-    padding-left: 0;
+.busStopName {
+    font-size: 13pt;
 }
 
-h3.busStopHeader {
-    background-color: black;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
+.busStopTowards {
+    margin: 0;
+    padding-top: 4px;
+    line-height: 16px;
+    font-size: 15px;
 }
 
-li.busStopDeparture {
-    padding: 10px;
-    list-style: none;
-    vertical-align: center;
-    margin-left: 0;
+.busStopHeader>span {
+    position: absolute;
+    display: block;
+    left: 0;
 }
 
-.busDeparture {
-    float: right;
-}
-
-.busNumber {
-    background-color: red;
-    color: white;
-    border-radius: 5px;
-    text-align: center;
-    width: 32pt;
-    float: left;
-}
-
-.busTowards {
-    padding: 10px;
-    font-weight: bold;
-}
+.busDepartureBoard {}
 
 .circle-icon {
+    margin: 0;
     display: inline-block;
     border-radius: 50%;
     text-transform: uppercase;
@@ -67,10 +56,53 @@ li.busStopDeparture {
     position: absolute;
     display: block;
     border-radius: 24px;
+    width: 24px;
+    vertical-align: middle;
     height: 24px;
     left: 2px;
     right: 2px;
     z-index: -1;
     top: 3px;
     border-bottom: 2px solid #ccc;
+}
+
+ol.busDepartureList {
+    list-style-position: inside;
+    margin: 0px;
+    padding: 0px;
+}
+
+li.busStopDeparture {
+    margin: 0;
+    padding: 0;
+    padding-right: 10px;
+    list-style: none;
+    line-height: 32px;
+    border: 1px solid rgb(225, 225, 225);
+    font-family: Arial;
+    font-weight: bold;
+    height: 32px;
+}
+
+.busTimeTill {
+    float: right;
+}
+
+.busDestination {
+    font-size: 10pt;
+    vertical-align: center;
+}
+
+.busNumber {
+    background-color: #C33;
+    margin: 0;
+    padding: 0;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    width: 32px;
+    height: 30px;
+    line-height:32px;
+    float: left;
+    margin-right: 25px;
 }

@@ -1,14 +1,17 @@
 <h2>Bus Departures</h2>
-<div id="busDepartures" ng-controller="BusDepartureController">
-   <div ng-repeat="stop in stops">
-      <span class="circle-icon red">{{stop.stopLetter}}</span>
-      <span class="busTowards">{{stop.commonName}} towards {{stop.towards}}</span>
-      <ul class="busDepartureList" class="busStopDeparture">
-         <li ng-repeat="departure in stop.departures" class="list-unstyled">
-               <span class="busNumber">{{departure.lineName}}</span>
-               <span class="busTowards">{{departure.destination}}</span>
-               <span>{{departure.until}} minutes</span>
-         </li>
-      </ul>
-   </div>
+<div ng-controller="BusDepartureController">
+    <div ng-repeat="stop in stops" class="busDepartureBoard">
+        <h1 class="busStopName">{{stop.commonName}}</h1>
+        <div class="busStopHeader">
+            <span class="circle-icon red">{{stop.stopLetter}}</span>
+            <p class="busStopTowards"> towards {{stop.towards}}</p>
+        </div>
+        <ol class="busDepartureList">
+            <li ng-repeat="departure in stop.departures" class="busStopDeparture">
+                <div class="busNumber">{{departure.lineName}}</div>
+                <span class="busDestination">{{departure.destination}}</span>
+                <span class="busTimeTill">{{departure.until}} minutes</span>
+            </li>
+        </ol>
+    </div>
 </div>

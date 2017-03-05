@@ -1,9 +1,4 @@
-#trainDepartures ul li {
-    padding: 6pt;
-}
-
 .toc {
-    border-radius: 5px;
     padding: 5px;
     margin: 0 10px 0 10px;
 }
@@ -25,6 +20,10 @@
     float: left;
 }
 
+.trainDestination {
+   text-align: center;
+}
+
 .trainEtd {
     float: right;
     font-weight: bold;
@@ -32,9 +31,24 @@
 
 .trainPlatform {
    font-style:italic;
+      text-align:center;
 }
 
-   #trainDepartures ul {
-       list-style: none;
-       padding-left: 0;
-   }
+.trainDepartures {
+       width:100%;
+
+
+}
+.trainDepartures tbody tr {
+   padding:5px;
+   border:1px solid rgb(225,225,225);
+}
+
+.trainDepartures tbody td {
+   padding:5px;
+   text-align:center;
+}
+
+.trainDepartures thead th {
+   text-align:center;
+}

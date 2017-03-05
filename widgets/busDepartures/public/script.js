@@ -21,16 +21,13 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                 }
                 $scope.stops.push(stop)
             })
-            console.log('busStops',$scope.stops)
             updateDepartures()
         })
 
         function updateDepartures() {
            var departureRequests = []
            $scope.stops.forEach(function (stop, index) {
-             $scope.stops[index].departures = []
              departureRequests.push($http.get('/busDeparturesList/' + stop.naptanId).then(function (result) {
-                console.log(result)
                 var departures = result.data
                 var services = {}
                 departures.forEach(function(departure) {
@@ -40,6 +37,7 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                     }
                     services[serviceKey].push(departure)
                 })
+                var newDepartures = []
                 Object.keys(services).forEach(function(serviceKey) {
                     var timesUntil = []
                     var service = services[serviceKey]
@@ -63,20 +61,20 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                            }
                         }
                     })
-                    $scope.stops[index].departures.push({
+
+                    newDepartures.push({
                         'lineName': lineName,
                         'destination': destination,
                         'until': untilString
                     })
-                    console.log(lineName, "to", destination, "in", untilString)
-
                })
+               $scope.stops[index].departures = newDepartures
              }))
           })
         }
 
         $interval(function() {
             updateDepartures()
-        }, 30000)
+        }, 30*1000)
     }
 ])

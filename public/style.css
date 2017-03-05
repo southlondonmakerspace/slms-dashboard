@@ -1,0 +1,32 @@
+html,
+body,
+.container {
+    padding: 0;
+    margin: 0;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+
+.row {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.page-header {
+    margin-top: 0px;
+    padding-top: 0px;
+    height: 75px;
+    vertical-align: middle;
+}
+
+#msLogo {
+    background-image: url(/Logomark.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: red;
+    width: 75px;
+    height: 75px;
+    float: left;
+    padding: 10px;
+    margin-right: 20px;
+}

@@ -9,104 +9,8 @@
     <script src="/bower_components/angular/angular.min.js"></script>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <style>
-        html,
-        body,
-        .container {
-            padding: 0;
-            margin: 0;
-            margin-left: 0px;
-            margin-top: 0px;
-        }
-
-        .row {
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
-        .page-header {
-            margin-top: 0px;
-            padding-top: 0px;
-            height: 75px;
-            vertical-align: middle;
-        }
-
-        #msLogo {
-            background-image: url(/Logomark.png);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-color: red;
-            width: 75px;
-            height: 75px;
-            float: left;
-            padding: 10px;
-            margin-right: 20px;
-        }
-    </style>
-
-    <script>
-        var dashboard = angular.module('slmsDashboard', [])
-
-        function updateBoards() {
-            widgetUpdates.forEach(function(fn) {
-                fn()
-            })
-        }
-
-        var widgetUpdates = []
-
-        // get a list of all the available widgets
-        $.getJSON('/widgets', {}, function(data) {
-            // make some promises - when all widgets have completed loading ...
-            var widgetPromises = []
-            data.forEach(function(widget) {
-                widgetPromises.push(new Promise(function(fulfil, reject) {
-                    // load the CSS for this widget (if there is any)
-                    $.get('/' + widget + '/style.css', {}).done(function(data, textStatus, jqXHR) {
-                        console.log('[' + widget + ']' + ": loaded css successfully")
-                        $('<link>')
-                            .appendTo('head')
-                            .attr({
-                                type: 'text/css',
-                                rel: 'stylesheet',
-                                href: '/' + widget + '/style.css'
-                            });
-                    }).fail(function(jqxhr, settings, exception) {
-                        console.error('[' + widget + ']' + ":  error loading script, " + exception)
-                    });
-                    $.getScript('/' + widget + '/script.js', function() {
-                        console.log('[' + widget + ']' + ": loaded script successfully")
-                        $('#for-' + widget).load('/' + widget + '/widget.html', function(response, status, xhr) {
-                            if (status == "error") {
-                                var msg = "Sorry but there was an error loading the partial HTML ";
-                                console.log('[' + widget + ']:' + msg)
-                                reject()
-                            } else {
-                                console.log('[' + widget + ']' + ": loaded html partial successfully")
-                                // load the Javascript
-                                fulfil()
-
-                            }
-                        })
-                    })
-                    // load the HTML partial and stick it into an element named for-$widgetName
-
-                }))
-            })
-            Promise.all(widgetPromises).then(function () {
-               angular.element(document).ready(function() {
-                   angular.bootstrap(document, ['slmsDashboard']);
-               });
-               setInterval(function() {
-                   updateBoards()
-               }, 30 * 1000)
-               setTimeout(function() {
-                   updateBoards()
-               }, 1000)
-            })
-
-        })
-    </script>
+    <script src="/app.js"></script>
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
@@ -116,10 +20,10 @@
             <h1>South London Makerspace Dashboard</h1>
         </div>
         <div class="row">
-            <div class="col-md-3" id="for-tubeStatus">
+            <!--div class="col-md-2" id="for-tubeStatus">
 
-            </div>
-            <div class="col-md-4" id="for-busDepartures">
+            </div-->
+            <div class="col-md-5" id="for-busDepartures">
 
             </div>
             <div class="col-md-5" id="for-trainDepartures">
