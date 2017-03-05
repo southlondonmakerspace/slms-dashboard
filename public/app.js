@@ -2,7 +2,7 @@ var dashboard = angular.module('slmsDashboard', ['ds.clock'])
 
 dashboard.controller('HeaderController', ['$scope', '$timeout',
     function($scope) {
-
+}
 ])
 
 function updateBoards() {
