@@ -1,4 +1,4 @@
-<h2>Train Departures</h2>
+<h3>Train Departures</h3>
 <div ng-controller="TrainDepartureController">
     <h4>{{locationName}}</h4>
     <div role="alert" class="alert alert-warning" ng-if="showMessage">{{message}}</div>
@@ -13,14 +13,11 @@
         </thead>
         <tbody>
             <tr ng-repeat="service in departures" class="list-unstyled">
-
                 <td class="toc toc-{{service.operatorCode}}">{{service.operator}}</td>
                 <td class="trainDestination">{{service.destinationName}}</td>
                 <td class="trainPlatform">{{service.platform}}</td>
                 <td class="trainTime">{{service.std}}</td>
-                <td>
-                    <div class="trainEtd">{{service.etd}}</div>
-                </td>
+                <td class="trainEtd">{{service.etd}}</td>
             </tr>
         </tbody>
     </table>

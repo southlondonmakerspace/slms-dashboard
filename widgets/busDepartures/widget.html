@@ -1,8 +1,8 @@
-<h2>Bus Departures</h2>
+<h3>Bus Departures</h3>
 <div ng-controller="BusDepartureController">
     <div ng-repeat="stop in stops" class="busDepartureBoard">
-        <h1 class="busStopName">{{stop.commonName}}</h1>
         <div class="busStopHeader">
+           <h4 class="busStopName">{{stop.commonName}}</h4>
             <span class="circle-icon red">{{stop.stopLetter}}</span>
             <p class="busStopTowards"> towards {{stop.towards}}</p>
         </div>

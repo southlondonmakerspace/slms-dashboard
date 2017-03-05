@@ -5,6 +5,7 @@
 /* Train Operator colours */
 /* https://en.wikipedia.org/wiki/Wikipedia:WikiProject_UK_Railways/Colours_list */
 
+
 .toc-SE {
     background-color: #00afe8;
 }
@@ -25,7 +26,6 @@
 }
 
 .trainEtd {
-    float: right;
     font-weight: bold;
 }
 
