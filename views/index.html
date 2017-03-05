@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>South London Makerspace Dashboard</title>
-<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css">
     <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/bower_components/moment/moment.js"></script>
     <script src="bower_components/angular-ui-clock/dist/angular-clock.js"></script>
@@ -17,35 +19,42 @@
 </head>
 
 <body>
-   <div class="page-header" ng-controller="HeaderController">
-      <div class="clock">
-         <ds-widget-clock show-analog></ds-widget-clock>
-      </div>
-       <div id="msLogo">&nbsp;</div>
+    <div class="page-header" ng-controller="HeaderController">
 
-       <h1>Dashboard</h1>
+        <div class="clock">
+            <ds-widget-clock show-analog></ds-widget-clock>
+        </div>
 
-   </div>
+        <div id="msLogo">&nbsp;</div>
+
+        <h1>Dashboard</h1>
+        <div class="check-element animate-show-hide" ng-show="showMessage">
+            <div class="alert alert-info dashboardAlert "><i class="glyphicon glyphicon-flash"></i><strong>{{messageType}}</strong>: {{message}}</div>
+        </div>
+
+    </div>
     <div class="container">
-      <div class="row">
-         <div class="col-md-12">
 
-         </div>
-      </div>
         <div class="row">
             <!--div class="col-md-2" id="for-tubeStatus">
 
             </div-->
+            <div class="col-md-6">
+                <div id="for-happenings"></div>
+                <div id="for-trainDepartures"></div>
+
+            </div>
             <div class="col-md-6" id="for-busDepartures">
 
             </div>
-            <div class="col-md-6">
 
-                <div id="for-trainDepartures"></div>
-                <div id="for-happenings"></div>
-            </div>
         </div>
     </div>
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">South London Makerspace</p>
+        </div>
+    </footer>
 </body>
 
 </html>

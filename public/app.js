@@ -1,7 +1,16 @@
-var dashboard = angular.module('slmsDashboard', ['ds.clock'])
+var dashboard = angular.module('slmsDashboard', ['ds.clock', 'ngAnimate'])
 
 dashboard.controller('HeaderController', ['$scope', '$timeout',
-    function($scope) {
+    function($scope, $timeout) {
+      $scope.showMessage = false
+      $scope.messageType = "A thing happened"
+      $scope.message = "Pop goes the weasel"
+      $timeout(function () {
+         $scope.showMessage = true
+         $timeout(function () {
+            $scope.showMessage = false
+         },5000)
+      },5000)
 }
 ])
 

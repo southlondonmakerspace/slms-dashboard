@@ -1,22 +1,32 @@
-<h3>Events</h3>
+<h3>What's Happening in the Space</h3>
 <div ng-controller="NowAndNextController">
-   <div ng-repeat="nowEvent in now" class="nowNextNowEvent">
-      <h4>Now: {{nowEvent.summary}}</h4>
-      <p>
-         {{nowEvent.start | date : 'HH:mm'}} - {{nowEvent.end | date : 'HH:mm'}}
-      </p>
-   </div>
-   <div ng-show="!now.length" class="nowNextNowEvent">
-      <!-- no events right now -->
-      <h4>Nothing right now</h4>
-      <p>Upcoming events below...</p>
-   </div>
-    <h4>Coming later...</h4>
-    <ol class="list-unstyled">
-        <li ng-repeat="nextEvent in next | limitTo: 3" class="nowNextNextEvent">
-            <strong>{{nextEvent.summary}}</strong>
-            <p><span>{{nextEvent.start | date : 'd LLLL'}}</span>
-            <span>{{nextEvent.start | date : 'HH:mm'}} - {{nextEvent.end | date : 'HH:mm'}}</span></p>
-        </li>
-    </ol>
+    <div class="row">
+        <div class="col-md-8">
+            <div ng-repeat="nowEvent in now" class="nowNextNowEvent">
+               <small class="text-muted">Now</small>
+                <h1 class="display-1">{{nowEvent.summary}}</h1>
+                <p class="lead">
+                    {{nowEvent.start | date : 'HH:mm'}} - {{nowEvent.end | date : 'HH:mm'}}
+                </p>
+                <p class="text-muted">
+                  {{nowEvent.description}}
+                </p>
+            </div>
+            <div ng-show="!now.length" class="nowNextNowEvent">
+                <!-- no events right now -->
+                <h1 class="display-1">Nothing right now</h1>
+                <p></p>
+            </div>
+        </div>
+        <div class="nowNextNext col-md-4">
+            <h4>Coming later...</h4>
+            <ol class="list-unstyled">
+                <li ng-repeat="nextEvent in next | limitTo: 3" class="nowNextNextEvent">
+                    <strong>{{nextEvent.summary}}</strong>
+                    <p><span>{{nextEvent.start | date : 'd LLLL'}}</span>
+                        <span>{{nextEvent.start | date : 'HH:mm'}} - {{nextEvent.end | date : 'HH:mm'}}</span></p>
+                </li>
+            </ol>
+        </div>
+    </div>
 </div>
