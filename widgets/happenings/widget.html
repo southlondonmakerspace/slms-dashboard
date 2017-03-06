@@ -1,7 +1,6 @@
 <h3>What's Happening in the Space</h3>
 <div ng-controller="NowAndNextController">
-    <div class="row">
-        <div class="col-md-8">
+        <div>
             <small class="text-muted">Now</small>
             <div ng-repeat="nowEvent in now" class="nowNextNowEvent">
                 <h1 class="display-1">{{nowEvent.summary}}</h1>
@@ -15,14 +14,13 @@
             </div>
             <div ng-show="!now.length" class="nowNextNowEvent">
                 <!-- no events right now -->
-                <small class="text-muted">Now</small>
                 <h1 class="display-1">Nothing in particular</h1>
                 <p class="lead">
                     Just members busy making
                 </p>
             </div>
         </div>
-        <div class="nowNextNext col-md-4" ng-show="next.length">
+        <div class="nowNextNext" ng-show="next.length">
             <small class="text-muted">Coming up ...</small>
             <ol class="list-unstyled">
                 <li ng-repeat="nextEvent in next | limitTo: 3" class="nowNextNextEvent">
@@ -32,5 +30,4 @@
                 </li>
             </ol>
         </div>
-    </div>
 </div>
