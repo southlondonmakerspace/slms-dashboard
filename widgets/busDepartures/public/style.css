@@ -3,19 +3,18 @@
     padding: 5px 0 10px 10px;
     padding-left: 35px;
     min-height: 40px;
-    padding-right: 70px;
-    font-size: 20px;
 }
 
 .busStopName {
-    font-size: 13pt;
+    font-size: 12pt;
 }
 
 .busStopTowards {
     margin: 0;
-    padding-top: 4px;
+    padding:0;
+    padding-top: 8px;
     line-height: 16px;
-    font-size: 15px;
+    font-size: 10pt;
 }
 
 .busStopHeader>span {
@@ -24,7 +23,9 @@
     left: 0;
 }
 
-.busDepartureBoard {}
+.busDepartureBoard {
+
+}
 
 .circle-icon {
     margin: 0;
@@ -104,9 +105,9 @@ small.busDestination {
     color: white;
     text-align: center;
     vertical-align: middle;
-    width: 32px;
+    width: 28px;
     height: 30px;
-    line-height:32px;
+    line-height:28px;
     float: left;
     margin-right: 25px;
 }

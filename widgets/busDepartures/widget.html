@@ -1,6 +1,7 @@
-<h3>Bus Departures</h3>
+
 <div ng-controller="BusDepartureController" class="row">
-    <div ng-repeat="(stopName, stop) in stops" class="busDepartureBoard col-md-6">
+   <h2>Bus Departures</h2>
+    <div ng-repeat="(stopName, stop) in stops" class="busDepartureBoard">
         <h4 class="busStopName">{{stopName}}</h4>
         <div ng-repeat="station in stop.stations">
             <div class="busStopHeader">
