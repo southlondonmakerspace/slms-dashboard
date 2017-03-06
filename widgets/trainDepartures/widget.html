@@ -3,7 +3,7 @@
     <h4>{{locationName}}</h4>
     <div role="alert" class="alert alert-warning" ng-if="showMessage">{{message}}</div>
     <div role="alert" class="alert alert-warning" ng-if="!departures.length">No trains yet!</div>
-    <table class="trainDepartures">
+    <table class="trainDepartures"  ng-show="departures.length">
         <thead>
             <th>Operator</th>
             <th>Destination</th>
