@@ -35,3 +35,12 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+# list config file
+config.js
+
+#bower
+bower_components
+
+#Mac bollocks
+.DS_Store
