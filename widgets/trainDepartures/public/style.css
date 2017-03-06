@@ -16,13 +16,11 @@
 
 .trainTime {
     font-weight: bold;
-    width: 32pt;
-    text-align: center;
     float: left;
 }
 
 .trainDestination {
-   text-align: center;
+
 }
 
 .trainEtd {
@@ -30,14 +28,14 @@
 }
 
 .trainPlatform {
-      text-align:center;
+      width:75px;
+      text-align: center;
 }
 
 .trainDepartures {
        width:100%;
-
-
 }
+
 .trainDepartures tbody tr {
    padding:5px;
    border:1px solid rgb(225,225,225);
@@ -45,9 +43,8 @@
 
 .trainDepartures tbody td {
    padding:5px;
-   text-align:center;
 }
 
 .trainDepartures thead th {
-   text-align:center;
+
 }
