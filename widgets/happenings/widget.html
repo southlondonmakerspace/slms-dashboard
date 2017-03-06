@@ -2,24 +2,28 @@
 <div ng-controller="NowAndNextController">
     <div class="row">
         <div class="col-md-8">
+            <small class="text-muted">Now</small>
             <div ng-repeat="nowEvent in now" class="nowNextNowEvent">
-               <small class="text-muted">Now</small>
                 <h1 class="display-1">{{nowEvent.summary}}</h1>
                 <p class="lead">
-                    {{nowEvent.start | date : 'HH:mm'}} - {{nowEvent.end | date : 'HH:mm'}}
+                    {{nowEvent.start | date : 'HH:mm'}} - {{nowEvent.end | date : 'HH:mm'}}<br />
+                    <span ng-show="now.length==1">
+                        {{nowEvent.description}}
+                    </span>
                 </p>
-                <p class="text-muted">
-                  {{nowEvent.description}}
-                </p>
+
             </div>
             <div ng-show="!now.length" class="nowNextNowEvent">
                 <!-- no events right now -->
-                <h1 class="display-1">Nothing right now</h1>
-                <p></p>
+                <small class="text-muted">Now</small>
+                <h1 class="display-1">Nothing in particular</h1>
+                <p class="lead">
+                    Just members busy making
+                </p>
             </div>
         </div>
-        <div class="nowNextNext col-md-4">
-            <h4>Coming later...</h4>
+        <div class="nowNextNext col-md-4" ng-show="next.length">
+            <small class="text-muted">Coming up ...</small>
             <ol class="list-unstyled">
                 <li ng-repeat="nextEvent in next | limitTo: 3" class="nowNextNextEvent">
                     <strong>{{nextEvent.summary}}</strong>
