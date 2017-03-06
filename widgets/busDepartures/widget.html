@@ -8,10 +8,11 @@
                 <p class="busStopTowards"> towards {{station.towards}}</p>
             </div>
             <ol class="busDepartureList">
-                <li ng-repeat="departure in station.departures" class="busStopDeparture">
+                <li ng-repeat="departure in station.departures | filter : {closest:true} " class="busStopDeparture">
                     <div class="busNumber">{{departure.lineName}}</div>
-                    <span class="busDestination">{{departure.destination}}</span>
-                    <span class="busTimeTill">{{departure.until}} minutes</span>
+                    <small class="busDestination" ng-show="departure.destination.length > 18">{{departure.destination}}</small>
+                    <span class="busDestination" ng-show="departure.destination.length <= 18">{{departure.destination}}</span>
+                    <span class="busTimeTill">{{departure.until}} mins</span>
                 </li>
             </ol>
         </div>

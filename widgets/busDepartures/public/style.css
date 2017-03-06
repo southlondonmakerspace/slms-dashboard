@@ -88,8 +88,12 @@ li.busStopDeparture {
     float: right;
 }
 
-.busDestination {
+span.busDestination {
     font-size: 10pt;
+    vertical-align: center;
+}
+small.busDestination {
+    font-size: 8pt;
     vertical-align: center;
 }
 

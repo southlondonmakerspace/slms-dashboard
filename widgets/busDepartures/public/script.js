@@ -1,7 +1,7 @@
 var dashboard = angular.module('slmsDashboard')
 
-dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
-    function($scope, $http, $interval) {
+dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval', '$q',
+    function($scope, $http, $interval, $q) {
         console.log('[busDepartures]: getting list of bus stops')
         $scope.stops = []
         $http.get('/busStops').then(function(result) {
@@ -17,8 +17,8 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                     })
                 }
                 if ($scope.stops[stop.commonName] == undefined) {
-                   $scope.stops[stop.commonName] = {}
-                   $scope.stops[stop.commonName].name = stop.commonName
+                    $scope.stops[stop.commonName] = {}
+                    $scope.stops[stop.commonName].name = stop.commonName
                     $scope.stops[stop.commonName].stations = []
                 }
                 $scope.stops[stop.commonName].stations.push(stop)
@@ -31,18 +31,19 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                return 1
                return 0
             })*/
-            console.log('busDepartures scope',$scope.stops)
             updateDepartures()
         })
 
         function updateDepartures() {
             console.log('[busDepartures]', 'updating')
-            Object.keys($scope.stops).forEach(function(stopGroupName, stopGroupIndex) {
-               var stopGroup = $scope.stops[stopGroupName]
-               console.log('[busDepartures]','looking up departures for ', stopGroupName)
+            var scopeCopy = JSON.parse(JSON.stringify($scope.stops)) // copy stops
+            var queryPromises = []
+            Object.keys(scopeCopy).forEach(function(stopGroupName, stopGroupIndex) {
+                var stopGroup = scopeCopy[stopGroupName]
+                //console.log('[busDepartures]', 'looking up departures for ', stopGroupName)
                 stopGroup.stations.forEach(function(stop, stopIndex) {
-                   console.log('[busDepartures]','looking up specific departures for ', stop)
-                    $http.get('/busDeparturesList/' + stop.naptanId).then(function(result) {
+                    //console.log('[busDepartures]', 'looking up specific departures for ', stop)
+                    queryPromises.push($http.get('/busDeparturesList/' + stop.naptanId).then(function(result) {
                         var departures = result.data
                         var services = {}
                         departures.forEach(function(departure) {
@@ -101,13 +102,78 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                                 return 1;
                             return 0;
                         })
-                        console.log('[busDepartures] new departures', stopGroupName,stopIndex, newDepartures)
-                        $scope.stops[stopGroupName].stations[stopIndex].departures = newDepartures
-                    })
-                    console.log($scope.stops)
+                        //console.log('[busDepartures] new departures', stopGroupName, stopIndex, newDepartures)
+                        scopeCopy[stopGroupName].stations[stopIndex].departures = newDepartures
+                    }))
+
                 })
             })
+            $q.all(queryPromises).then(function() {
+                // now... once we have all the departures, we need to go through each service, and look for the one in each direction with
+                // minimum distance, and flag that one so we can display just the closest service
+                var closestService = {}
+                console.log('[busDepartures]', 'all HTTP departure board queries are finished')
+                Object.keys(scopeCopy).forEach(function(stopGroupName, stopGroupIndex) {
+
+                    var stopGroup = scopeCopy[stopGroupName]
+                    stopGroup.stations.forEach(function(stop, stopIndex) {
+                        if (stop.departures == undefined)
+                            return
+                        stop.departures.forEach(function(departure, departureIndex) {
+                            var serviceKey = departure.lineName + ":" + departure.destination
+                            if (closestService[serviceKey] == undefined) // never seen this service before
+                            {
+                                closestService[serviceKey] = {
+                                    distance: stop.distance,
+                                    stopIndex: stopIndex,
+                                    stopGroupName: stopGroupName,
+                                    departureIndex: departureIndex
+                                }
+                            }
+                            if ((closestService[serviceKey].distance > stop.distance)) {
+                                closestService[serviceKey] = {
+                                    distance: stop.distance,
+                                    stopIndex: stopIndex,
+                                    stopGroupName: stopGroupName,
+                                    departureIndex: departureIndex
+                                }
+                            }
+                        })
+                    })
+                })
+
+                Object.values(closestService).forEach(function(service) {
+                    scopeCopy[service.stopGroupName].stations[service.stopIndex].departures[service.departureIndex].closest = true
+                })
+                console.log('[busDepartures]', 'after updating scope', scopeCopy)
+
+                // now, finally - remove any stops that have no busses that are the closest
+                Object.keys(scopeCopy).forEach (function (stopGroupName)
+                {
+                   var stopGroup = scopeCopy[stopGroupName]
+                   stopGroup.stations.forEach(function (station, stationIndex)
+                   {
+                      var closestServices = 0
+                      station.departures.forEach(function (departure) {
+                        if (departure.closest)
+                        {
+                           closestServices++
+                        }
+                     })
+                     if (closestServices == 0)
+                     {
+                        console.log('[busDepartures]','deleting',stopGroupName,station)
+                           delete scopeCopy[stopGroupName]
+                     }
+                  })
+
+               })
+                $scope.stops = scopeCopy
+
+            })
+            // out here
         }
+
 
         $interval(function() {
             updateDepartures()
