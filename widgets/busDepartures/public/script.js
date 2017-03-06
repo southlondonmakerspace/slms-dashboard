@@ -2,8 +2,10 @@ var dashboard = angular.module('slmsDashboard')
 
 dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
     function($scope, $http, $interval) {
+      console.log('[busDepartures]: getting list of bus stops')
         $scope.stops = []
         $http.get('/busStops').then(function(result) {
+           console.log('[busDepartures]: bus stops retrieved')
             var stopList = result.data
             // keep a log of all the requests being made, so we can callback when they're all done
             var departureRequests = []
@@ -15,12 +17,20 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                     stop.additionalProperties.forEach(function(property) {
                         if (property.key == 'Towards') {
                             stop.towards = property.value
-
                         }
                     })
                 }
+                console.log(stop.commonName)
                 $scope.stops.push(stop)
             })
+            // sort the stops by name
+            /*$scope.stops.sort(function (a, b){
+               if( a.commonName < b.commonName )
+               return -1
+               if (a.commonName > b.commonName)
+               return 1
+               return 0
+            })*/
             updateDepartures()
         })
 
@@ -50,23 +60,28 @@ dashboard.controller('BusDepartureController', ['$scope', '$http', '$interval',
                         })
 
                         var untilString = ""
-                        var i = timesUntil.length
-                        var earliestTime = 9999
+
                         timesUntil.sort(function (a,b) { return a-b;})
-                        timesUntil.forEach(function(time) {
-                            if (time < earliestTime) {
-                                earliestTime = time
-                            }
-                            i--
+                        var earliestTime = timesUntil[0]
+                        var numTimes = 0;
+                        var i = 0
+                        const MAX_TIMES_TO_SHOW = 2
+                        var numTimesToShow = (timesUntil.length <= MAX_TIMES_TO_SHOW) ? timesUntil.length : MAX_TIMES_TO_SHOW;
+                        for (i=0;i<numTimesToShow;i++)
+                        {
+                           var time = timesUntil[i]
                             untilString += Math.floor(time / 60) + " "
-                            if (i != 0) {
-                                if (i == 1) {
+                            if (i < numTimesToShow) {
+                                if (i == numTimesToShow-2) {
                                     untilString += " and "
                                 } else {
-                                    untilString += ", "
+                                   if (i != numTimesToShow-1)
+                                   {
+                                      untilString += ", "
+                                   }
                                 }
                             }
-                        })
+                        }
 
                         newDepartures.push({
                             'lineName': lineName,
