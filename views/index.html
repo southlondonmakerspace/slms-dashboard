@@ -10,12 +10,14 @@
     <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="bower_components/angular-ui-clock/dist/angular-clock.css">
+    <script src="/socket.io/socket.io.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/bower_components/moment/moment.js"></script>
     <script src="bower_components/angular-ui-clock/dist/angular-clock.js"></script>
     <script src="/app.js"></script>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="bower_components/angular-ui-clock/dist/angular-clock.css">
+
 </head>
 
 <body>
@@ -29,7 +31,7 @@
 
         <h1>Dashboard</h1>
         <div class="check-element animate-show-hide" ng-show="showMessage">
-            <div class="alert alert-info dashboardAlert "><i class="glyphicon glyphicon-flash"></i><strong>{{messageType}}</strong>: {{message}}</div>
+            <div class="alert {{messageType}} dashboardAlert "><i class="glyphicon glyphicon-flash"></i> {{message}}</div>
         </div>
 
     </div>

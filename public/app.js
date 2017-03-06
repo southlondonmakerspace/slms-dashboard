@@ -1,16 +1,45 @@
 var dashboard = angular.module('slmsDashboard', ['ds.clock', 'ngAnimate'])
 
-dashboard.controller('HeaderController', ['$scope', '$timeout',
-    function($scope, $timeout) {
-      $scope.showMessage = false
-      $scope.messageType = "A thing happened"
-      $scope.message = "Pop goes the weasel"
-      $timeout(function () {
-         $scope.showMessage = true
+dashboard.factory('socket', function ($rootScope) {
+  var socket = io.connect();
+  return {
+    on: function (eventName, callback) {
+      socket.on(eventName, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          callback.apply(socket, args);
+        });
+      });
+    },
+    emit: function (eventName, data, callback) {
+      socket.emit(eventName, data, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
+      })
+    }
+  };
+});
+
+dashboard.controller('HeaderController', ['$scope', '$timeout','socket',
+    function($scope, $timeout, socket) {
+      socket.emit('join')
+      socket.on('alert', function (data) {
+         console.log('socketio: ', data)
+         $scope.showMessage = true;
+         $scope.messageType = data.messageType
+         $scope.message = data.message
+         $scope.messageTimeout = data.messageTimeout
          $timeout(function () {
-            $scope.showMessage = false
-         },5000)
-      },5000)
+            $scope.showMessage = false;
+         },data.messageTimeout)
+      })
+      $scope.showMessage = false
+      $scope.messageType = ""
+      $scope.message = ""
 }
 ])
 
