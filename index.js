@@ -85,12 +85,12 @@ router.post('/event', function (req, res) {
    console.log('alert', req.body)
    res.end(sendAlert(req.body.name + " has " + req.body.action))
 })
-app.use(bunyanRequest({
+/*app.use(bunyanRequest({
     logger: bunyan.createLogger({
         name: "slms-dashboard-http",
         headerName: 'x-request-id'
     })
-}));
+}));*/
 app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')))
 app.use("/", router);
 app.use(express.static('public'))
