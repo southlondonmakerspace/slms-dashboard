@@ -13,14 +13,15 @@
             <th>Actual</th>
         </thead>
         <tbody>
-            <tr ng-repeat="service in departures" class="list-unstyled">
+            <tr ng-repeat="service in departures" class="list-unstyled trainCancelled-{{service.isCancelled}}">
                 <td class="trainPlatform">{{service.platform}}</td>
                 <td class="trainDestination">
                     {{service.destinationName}}
                 </td>
 
                 <td class="trainTime">{{service.relativeTime}}<br /><small>({{service.std}})</small></td>
-                <td class="trainEtd">{{service.etd}}</td>
+                <td class="trainEtd" ng-show="!service.isCancelled">{{service.relativeActualTime}}<br /><small>({{service.etd}})</small></td>
+                 <td class="trainEtd" ng-show="service.isCancelled">CANCELLED</td>
             </tr>
         </tbody>
     </table>

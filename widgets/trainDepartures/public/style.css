@@ -5,7 +5,9 @@
 /* Train Operator colours */
 /* https://en.wikipedia.org/wiki/Wikipedia:WikiProject_UK_Railways/Colours_list */
 
-
+.trainCancelled-true {
+   background-color: rgb(255, 154, 154);
+}
 .toc-SE {
     background-color: #00afe8;
 }

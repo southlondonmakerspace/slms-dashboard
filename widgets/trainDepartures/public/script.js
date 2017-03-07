@@ -14,6 +14,7 @@ dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval'
                     console.error('[trainDepartures] invalid board recieved', result.data)
                     return
                 }
+
                 if (board.nrccMessages != undefined) {
                    var myMessage = ""
                     $scope.showMessage = true
@@ -46,7 +47,22 @@ dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval'
                            }
                            // otherwise, it actually IS the time it says it is
                         }
-                        modified.relativeTime = relativeTime.fromNow(true)
+                        var actualTime = moment(relativeTime)
+                        if (modified.etd != 'On time')
+                        {
+                           actualTime = moment(modified.etd,"HH:mm")
+                           if (actualTime.isBefore(moment()))
+                           {
+                              // right. if the hour is before 4AM, then it's talking about a train after midnight
+                              if (actualTime.hour() <= 4)
+                              {
+                                 actualTime.add(1,'day')
+                              }
+                              // otherwise, it actually IS the time it says it is
+                           }
+                        }
+                        modified.relativeTime = relativeTime.fromNow()
+                        modified.relativeActualTime = actualTime.fromNow()
                         console.log('[trainDepartures]','departure',modified.std,modified.relativeTime)
 
                         departures.push(modified)
