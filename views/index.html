@@ -21,21 +21,18 @@
 </head>
 
 <body>
+   <header>
+   <ds-widget-clock show-analog></ds-widget-clock>
     <div class="page-header" ng-controller="HeaderController">
-
-        <div class="clock">
-            <ds-widget-clock show-analog></ds-widget-clock>
-        </div>
-
         <div id="msLogo">&nbsp;</div>
 
-        <h1>Dashboard</h1>
         <div class="check-element animate-show-hide" ng-show="showMessage">
             <div class="alert {{messageType}} dashboardAlert "><i class="glyphicon glyphicon-flash"></i> {{message}}</div>
         </div>
 
     </div>
-    <div class="container">
+</header>
+    <div class="container" style="margin-left:5em;">
 
         <div class="row">
             <!--div class="col-md-2" id="for-tubeStatus">
