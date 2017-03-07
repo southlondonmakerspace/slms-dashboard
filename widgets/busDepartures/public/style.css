@@ -1,7 +1,6 @@
 .busStopHeader {
     position: relative;
-    padding: 5px 0 10px 10px;
-    padding-left: 35px;
+    padding: 10px 0 10px 35px;
     min-height: 40px;
 }
 
@@ -14,7 +13,7 @@
     padding:0;
     padding-top: 8px;
     line-height: 16px;
-    font-size: 10pt;
+    font-size: 12pt;
 }
 
 .busStopHeader>span {
@@ -26,7 +25,12 @@
 .busDepartureBoard {
 
 }
-
+.busDepartureBoard h4 {
+   font-size:14pt;
+   line-height:16pt;
+   margin-bottom:-5px;
+   padding-top:10px;
+}
 .circle-icon {
     margin: 0;
     display: inline-block;
@@ -90,11 +94,11 @@ li.busStopDeparture {
 }
 
 span.busDestination {
-    font-size: 10pt;
+    font-size: 9pt;
     vertical-align: center;
 }
 small.busDestination {
-    font-size: 8pt;
+    font-size: 7pt;
     vertical-align: center;
 }
 
