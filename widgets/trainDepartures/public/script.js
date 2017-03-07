@@ -1,7 +1,7 @@
 //widgetUpdates.push(function() {
 var dashboard = angular.module('slmsDashboard')
-dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval',
-    function($scope, $http, $interval) {
+dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval', '$sce',
+    function($scope, $http, $interval, $sce) {
         $scope.departures = []
         $interval(function() {
             updateBoard()
@@ -15,11 +15,13 @@ dashboard.controller('TrainDepartureController', ['$scope', '$http', '$interval'
                     return
                 }
                 if (board.nrccMessages != undefined) {
-                    $scope.message = ""
+                   var myMessage = ""
                     $scope.showMessage = true
                     board.nrccMessages.message.forEach(function(message) {
-                        $scope.message += "..." + message
+                        myMessage += message
                     })
+                    console.log('message', myMessage)
+                    $scope.message = $sce.trustAsHtml(myMessage)
                 } else {
                     $scope.showMessage = false
                 }
